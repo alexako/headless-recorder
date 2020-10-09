@@ -2,21 +2,20 @@ import pptrActions from './pptr-actions'
 import Block from './Block'
 import CodeGenerator from './CodeGenerator'
 
-const importPuppeteer = `const puppeteer = require('puppeteer');\n`
+const importPuppeteer = `import asyncio\nfrom pyppeteer import launch\n\n`
 
-const header = `const browser = await puppeteer.launch()
-const page = await browser.newPage()`
+const header = `browser = await launch()
+page = await browser.newPage()`
 
 const footer = `await browser.close()`
 
-const wrappedHeader = `(async () => {
-  const browser = await puppeteer.launch()
-  const page = await browser.newPage()\n`
+const wrappedHeader = `async def main():
+  browser = await launch()
+  page = await browser.newPage()\n`
 
-const wrappedFooter = `  await browser.close()
-})()`
+const wrappedFooter = `  await browser.close()`
 
-export default class PuppeteerCodeGenerator extends CodeGenerator {
+export default class PyppeteerCodeGenerator extends CodeGenerator {
   constructor (options) {
     super(options)
     this._header = header
@@ -30,6 +29,6 @@ export default class PuppeteerCodeGenerator extends CodeGenerator {
   }
 
   _handleViewport (width, height) {
-    return new Block(this._frameId, { type: pptrActions.VIEWPORT, value: `await ${this._frame}.setViewport({ width: ${width}, height: ${height} })` })
+    return new Block(this._frameId, { type: pptrActions.VIEWPORT, value: `await ${this._frame}.setViewport({ 'width': ${width}, 'height': ${height} })` })
   }
 }
