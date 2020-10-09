@@ -20,7 +20,7 @@
 </template>
 <script>
 export const TYPE = {
-  PUPPETEER: 'puppeteer',
+  PYPPETEER: 'puppeteer',
   PLAYWRIGHT: 'playwright'
 }
 
@@ -42,8 +42,8 @@ export default {
   },
   data () {
     return {
-      activeTab: TYPE.PUPPETEER,
-      tabs: [TYPE.PUPPETEER, TYPE.PLAYWRIGHT]
+      activeTab: TYPE.PYPPETEER,
+      tabs: [TYPE.PYPPETEER]
     }
   },
   mounted() {
@@ -55,7 +55,7 @@ export default {
   },
   methods: {
     code() {
-      return this.activeTab === TYPE.PUPPETEER ? this.puppeteer : this.playwright
+      return this.activeTab === TYPE.PYPPETEER ? this.puppeteer : this.playwright
     },
     changeTab(tab) {
       this.activeTab = tab

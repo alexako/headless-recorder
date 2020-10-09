@@ -18,7 +18,7 @@ class RecordingController {
     this._hasGoto = false
     this._hasViewPort = false
 
-    this._menuId = 'PUPPETEER_RECORDER_CONTEXT_MENU'
+    this._menuId = 'PYPPETEER_RECORDER_CONTEXT_MENU'
     this._menuOptions = {
       SCREENSHOT: 'SCREENSHOT',
       SCREENSHOT_CLIPPED: 'SCREENSHOT_CLIPPED'
