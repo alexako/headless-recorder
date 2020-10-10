@@ -30,7 +30,7 @@
           <a href="#" @click="showResultsTab = true" v-show="code">view code</a>
           <checkly-badge v-if="!isRecording"></checkly-badge>
         </div>
-        <ResultsTab :puppeteer="code" :playwright="codeForPlaywright" :options="options" v-if="showResultsTab" v-on:update:tab="currentResultTab = $event" />
+        <ResultsTab :puppeteer="code" :playwright="codeForPlaywright" :pyppeteer="codeForPyppeteer" :options="options" v-if="showResultsTab" v-on:update:tab="currentResultTab = $event" />
         <div class="results-footer" v-show="showResultsTab">
           <button class="btn btn-sm btn-primary" @click="restart" v-show="code">Restart</button>
           <a href="#" v-clipboard:copy="getCodeForCopy()" @click.prevent="setCopying" v-show="code">{{copyLinkText}}</a>
@@ -45,6 +45,7 @@
   import { version } from '../../../package.json'
   import PuppeteerCodeGenerator from '../../code-generator/PuppeteerCodeGenerator'
   import PlaywrightCodeGenerator from '../../code-generator/PlaywrightCodeGenerator'
+  import PyppeteerCodeGenerator from '../../code-generator/PyppeteerCodeGenerator'
   import RecordingTab from './RecordingTab.vue'
   import ResultsTab from './ResultsTab.vue'
   import HelpTab from './HelpTab.vue'
@@ -59,6 +60,7 @@ export default {
       return {
         code: '',
         codeForPlaywright: '',
+        codeForPyppeteer: '',
         options: {},
         showResultsTab: false,
         showHelp: false,
@@ -129,8 +131,10 @@ export default {
 
           const codeGen = new PuppeteerCodeGenerator(codeOptions)
           const codeGenPlaywright = new PlaywrightCodeGenerator(codeOptions)
+          const codeGenPyppeteer = new PyppeteerCodeGenerator(codeOptions)
           this.code = codeGen.generate(this.recording)
           this.codeForPlaywright = codeGenPlaywright.generate(this.recording)
+          this.codeForPyppeteer = codeGenPyppeteer.generate(this.recording)
           this.showResultsTab = true
           this.storeState()
         })
@@ -144,6 +148,7 @@ export default {
         this.recording = this.liveEvents = []
         this.code = ''
         this.codeForPlaywright = ''
+        this.codeForPyppeteer = ''
         this.showResultsTab = this.isRecording = this.isPaused = false
         this.storeState()
       },
@@ -154,7 +159,7 @@ export default {
         }
       },
       loadState (cb) {
-        this.$chrome.storage.local.get(['controls', 'code', 'options', 'codeForPlaywright'], ({ controls, code, options, codeForPlaywright }) => {
+        this.$chrome.storage.local.get(['controls', 'code', 'options', 'codeForPlaywright', 'codeForPyppeteer'], ({ controls, code, options, codeForPlaywright, codeForPyppeteer }) => {
           if (controls) {
             this.isRecording = controls.isRecording
             this.isPaused = controls.isPaused
@@ -168,6 +173,10 @@ export default {
             this.codeForPlaywright = codeForPlaywright
           }
 
+          if (codeForPyppeteer) {
+            this.codeForPyppeteer = codeForPyppeteer
+          }
+
           if (options) {
             this.options = options
           }
@@ -178,6 +187,7 @@ export default {
         this.$chrome.storage.local.set({
           code: this.code,
           codeForPlaywright: this.codeForPlaywright,
+          codeForPyppeteer: this.codeForPyppeteer,
           controls: {
             isRecording: this.isRecording,
             isPaused: this.isPaused
@@ -208,7 +218,12 @@ export default {
         }
       },
       getCodeForCopy () {
-        return this.currentResultTab === 'puppeteer' ? this.code : this.codeForPlaywright
+        const tabs = {
+          'puppeteer': this.code,
+          'playwright': this.codeForPlaywright,
+          'pyppeteer': this.codeForPyppeteer,
+        }
+        return tabs[this.currentResultTab]
       }
     },
     computed: {
