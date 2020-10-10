@@ -1,13 +1,14 @@
 {
   "name": "Headless Recorder",
-  "version": "0.8.0",
+  "version": "0.8.1",
   "manifest_version": 2,
   "description": "A Chrome extension for recording browser interaction and generating Puppeteer & Playwright scripts",
   "permissions": [
     "storage",
     "webNavigation",
     "activeTab",
-    "contextMenus"
+    "contextMenus",
+    "*://*/"
   ],
   "icons" : {
     "16": "images/app_icon_16.png",
