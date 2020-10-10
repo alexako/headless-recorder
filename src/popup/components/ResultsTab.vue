@@ -4,7 +4,7 @@
       <button v-for="tab in tabs" :key="tab" class="tabs__action" v-bind:class="{'selected': activeTab === tab}" @click.prevent="changeTab(tab)">
         <span v-if="tab === 'playwright'">🎭</span>
         <img v-if="tab === 'puppeteer'" src="/images/puppeteer.png" width="16" />
-        <span class="tabs__action--text">{{ tab }}</span>
+        <img v-if="tab === 'pyppeteer'" src="/images/pyppeteer.png" width="16" />
       </button>
     </div>
 
@@ -21,7 +21,8 @@
 <script>
 export const TYPE = {
   PUPPETEER: 'puppeteer',
-  PLAYWRIGHT: 'playwright'
+  PLAYWRIGHT: 'playwright',
+  PYPPETEER: 'pyppeteer',
 }
 
 export default {
@@ -35,6 +36,10 @@ export default {
       type: String, 
       default: ''
     },
+    pyppeteer: {
+      type: String, 
+      default: ''
+    },
     options: {
       type: Object,
       default: () => ({})
@@ -42,8 +47,8 @@ export default {
   },
   data () {
     return {
-      activeTab: TYPE.PUPPETEER,
-      tabs: [TYPE.PUPPETEER, TYPE.PLAYWRIGHT]
+      activeTab: TYPE.PYPPETEER,
+      tabs: [TYPE.PUPPETEER, TYPE.PLAYWRIGHT, TYPE.PYPPETEER]
     }
   },
   mounted() {
@@ -55,7 +60,13 @@ export default {
   },
   methods: {
     code() {
-      return this.activeTab === TYPE.PUPPETEER ? this.puppeteer : this.playwright
+      if (this.activeTab === TYPE.PYPPETEER) {
+        return this.pyppeteer
+      } else if (this.activeTab === TYPE.PLAYWRIGHT) {
+        return this.playwright
+      } else {
+        return this.puppeteer
+      }
     },
     changeTab(tab) {
       this.activeTab = tab
