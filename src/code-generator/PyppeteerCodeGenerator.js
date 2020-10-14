@@ -14,6 +14,7 @@ const wrappedHeader = `async def main():
     page = await browser.newPage()\n`
 
 const wrappedFooter = `  await browser.close()\n\n
+if __name__ == '__main__':    
     asyncio.get_event_loop().run_until_complete(main())`
 
 export default class PyppeteerCodeGenerator extends CodeGenerator {
