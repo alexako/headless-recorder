@@ -4,16 +4,16 @@ import CodeGenerator from './CodeGenerator'
 
 const importStatements = `import asyncio\nfrom pyppeteer import launch\n\n`
 
-const header = `browser = await launch()
+const header = `browser = await launch(headless=True)
 page = await browser.newPage()`
 
 const footer = `await browser.close()`
 
 const wrappedHeader = `async def main():
-    browser = await launch()
+    browser = await launch(headless=True)
     page = await browser.newPage()\n`
 
-const wrappedFooter = `  await browser.close()\n\n
+const wrappedFooter = `    await browser.close()\n\n
 if __name__ == '__main__':    
     asyncio.get_event_loop().run_until_complete(main())`
 
