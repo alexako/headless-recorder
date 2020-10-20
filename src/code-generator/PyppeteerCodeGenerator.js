@@ -9,13 +9,18 @@ page = await browser.newPage()`
 
 const footer = `await browser.close()`
 
-const wrappedHeader = `async def main():
-    browser = await launch(headless=True)
+const wrappedHeader = `async def main(headless=True):
+    browser = await launch(headless=headless)
     page = await browser.newPage()\n`
 
-const wrappedFooter = `    await browser.close()\n\n
+const wrappedFooter = `    await browser.close()
+
+
 if __name__ == '__main__':    
-    asyncio.get_event_loop().run_until_complete(main())`
+    import sys
+    headless = sys.argv[1].lower() in ['h', 'headless', 't', 'true'] if len(sys.argv) > 1 else True
+
+    asyncio.get_event_loop().run_until_complete(main(headless))`
 
 export default class PyppeteerCodeGenerator extends CodeGenerator {
   constructor (options) {
