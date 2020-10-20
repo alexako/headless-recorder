@@ -19,7 +19,7 @@ const wrappedFooter = `    await browser.close()
 
 if __name__ == '__main__':    
     import sys
-    headless = sys.argv[1].lower() in ['h', 'headless', 't', 'true'] if len(sys.argv) > 1 else True
+    headless = not sys.argv[1].strip('-').lower() in ['nh', 'no-headless'] if len(sys.argv) > 1 else True
 
     asyncio.get_event_loop().run_until_complete(main(headless))`
 
