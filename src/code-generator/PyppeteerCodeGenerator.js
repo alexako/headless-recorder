@@ -1,6 +1,7 @@
 import pptrActions from './pptr-actions'
 import Block from './Block'
 import CodeGenerator from './CodeGenerator'
+import domEvents from './dom-events-to-record'
 
 const importStatements = `import asyncio\nfrom pyppeteer import launch\n\n`
 
@@ -33,6 +34,12 @@ export default class PyppeteerCodeGenerator extends CodeGenerator {
 
   generate (events) {
     return importStatements + this._getHeader() + this._parseEvents(events) + this._getFooter()
+  }
+
+  _handleClick (selector) {
+    const block = new Block(this._frameId)
+    block.addLine({ type: domEvents.CLICK, value: `await asyncio.wait([ ${this._frame}.click('${selector}'), ${this._frame}.waitForNavigation() ])` })
+    return block
   }
 
   _handleViewport (width, height) {
